@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Vaultra Backend (Auth API)
 
 A real backend for the Vaultra site: sign up, log in, and forgot-password,
@@ -63,3 +64,6 @@ the server console so you can test the full flow locally.
 - **Email deliverability** — a dedicated transactional email provider (not
   personal Gmail) is strongly recommended once this is live, both for
   reliability and to avoid your domain getting flagged as spam.
+=======
+# crypto-dem
+>>>>>>> 2171f7a5938d44acb0724b6e79611c6e9c972e58
