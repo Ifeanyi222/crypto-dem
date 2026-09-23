@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vaultra — trade crypto with live market data, real-time charts, wallet connect, and secure accounts, in your language.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>">
+<title>Trade Crypto Confidently</title>
+<style>
+:root{
+  --ink:#0e1420; --paper:#f6f5f1; --card:#ffffff;
+  --accent:#1f6f5c; --accent-2:#c9a24b; --line:#e2e0d8;
+  --up:#1f8a5f; --down:#c1443a; --muted:#5c6470;
+  --font-display:'Iowan Old Style','Georgia',serif;
+  --font-body:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:10}
+.logo{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.5px}
+.logo em{font-style:normal;color:var(--accent)}
+nav{display:flex;gap:22px;align-items:center;font-size:.92rem}
+select{border:1px solid var(--line);background:var(--card);padding:6px 10px;border-radius:6px;font-family:inherit}
+.btn{background:var(--ink);color:#fff;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.9rem}
+.btn.ghost{background:transparent;border:1px solid var(--ink);color:var(--ink)}
+.btn:hover{opacity:.85}
+.hero{padding:70px 24px 50px;text-align:left}
+.hero h1{font-size:2.6rem;max-width:640px;line-height:1.15}
+.hero p{max-width:520px;color:var(--muted);font-size:1.05rem;margin-top:16px}
+.hero .cta{margin-top:26px;display:flex;gap:14px}
+section{padding:50px 24px;border-top:1px solid var(--line)}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
+.sec-head h2{font-size:1.5rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;color:var(--muted);font-weight:500;padding:8px;border-bottom:1px solid var(--line);font-size:.8rem}
+td{padding:10px 8px;border-bottom:1px solid var(--line);cursor:pointer}
+tr:hover td{background:#fbfaf6}
+.coin{display:flex;align-items:center;gap:8px}
+.coin img{width:22px;height:22px;border-radius:50%}
+.up{color:var(--up)} .down{color:var(--down)}
+.px{transition:background .3s}
+.table-wrap{overflow-x:auto}
+table{min-width:640px}
+.rank{color:var(--muted);width:24px}
+.searchBar{width:100%;max-width:280px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-family:inherit;margin-bottom:16px}
+.mkt-meta{color:var(--muted)}
+.footer-grid{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px;text-align:left;padding:0 24px 30px}
+.footer-grid h5{font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px}
+.footer-grid a{display:block;color:var(--ink);text-decoration:none;font-size:.88rem;margin-bottom:8px;opacity:.85}
+.footer-grid a:hover{text-decoration:underline}
+.footer-bottom{text-align:center;color:var(--muted);font-size:.8rem;padding-top:20px;border-top:1px solid var(--line);max-width:1080px;margin:0 auto}
+.chart-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:18px}
+canvas{width:100%;height:180px;display:block}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px}
+.card h3{font-size:1.1rem;margin-bottom:8px}
+.card .rate{font-size:1.8rem;color:var(--accent);font-family:var(--font-display)}
+.card p{color:var(--muted);font-size:.88rem;margin:8px 0 0}
+.disclaimer{font-size:.78rem;color:var(--muted);margin-top:20px;border-left:3px solid var(--accent-2);padding-left:12px}
+.news-item{padding:16px 0;border-bottom:1px solid var(--line)}
+.news-item h4{margin:0 0 4px;font-size:1rem}
+.news-item span{color:var(--muted);font-size:.8rem}
+footer{padding:30px 24px;text-align:center;color:var(--muted);font-size:.85rem}
+#supportBtn{position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;border:none;border-radius:30px;padding:14px 20px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.2);font-size:.9rem}
+#supportPanel{position:fixed;bottom:80px;right:22px;width:280px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:none;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+#supportPanel textarea{width:100%;height:70px;margin:10px 0;border:1px solid var(--line);border-radius:6px;padding:8px;font-family:inherit}
+#walletStatus{font-size:.85rem;color:var(--muted)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(14,20,32,.5);z-index:50;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:10px;padding:28px;width:320px;position:relative}
+.modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted)}
+.auth-form input{width:100%;padding:10px;margin:8px 0;border:1px solid var(--line);border-radius:6px;font-family:inherit}
+.auth-form h3{margin-bottom:4px}
+.modal-msg{font-size:.82rem;min-height:18px;margin:4px 0}
+.modal-msg.err{color:var(--down)} .modal-msg.ok{color:var(--up)}
+.switch{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;margin-top:10px}
+.switch span{cursor:pointer;text-decoration:underline}
+#userChip{font-size:.85rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Demo<em>ra</em></div>
+  <nav>
+    <select id="langSel">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="pt">Português</option>
+      <option value="ar">العربية</option>
+    </select>
+    <span id="authArea">
+      <button class="btn ghost" id="loginNavBtn" data-i="navLogin">Log In</button>
+      <button class="btn" id="signupNavBtn" data-i="navSignup">Sign Up</button>
+    </span>
+    <button class="btn" id="connectBtn">Connect Wallet</button>
+    <button class="btn ghost" id="fundBtn" data-i="fundBtn">Fund Wallet</button>
+    <button class="btn" id="tradeNavBtn" data-i="tradeTitle">Trade</button>
+  </nav>
+</header>
+
+<div id="onrampOverlay" class="modal-overlay">
+  <div class="modal" style="width:420px;max-width:90vw;padding:0">
+    <button class="modal-close" id="onrampClose" style="z-index:2">&times;</button>
+    <div id="onrampBody" style="padding:22px">
+      <p id="onrampMsg" class="modal-msg"></p>
+    </div>
+  </div>
+</div>
+
+<div id="authOverlay" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+
+    <div id="loginForm" class="auth-form">
+      <h3 data-i="loginTitle">Log in</h3>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPass" placeholder="Password">
+      <button class="btn" id="loginSubmit" data-i="loginBtn" style="width:100%">Log in</button>
+      <p class="modal-msg" id="loginMsg"></p>
+      <p class="switch"><span data-i="forgotLink" id="toForgot">Forgot password?</span> · <span data-i="needAccount" id="toSignupFromLogin">Need an account?</span></p>
+    </div>
+
+    <div id="signupForm" class="auth-form" style="display:none">
+      <h3 data-i="signupTitle">Create your account</h3>
+      <input type="text" id="signupName" placeholder="Full name">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPass" placeholder="Password (min 8 characters)">
+      <button class="btn" id="signupSubmit" data-i="signupBtn" style="width:100%">Sign up</button>
+      <p class="modal-msg" id="signupMsg"></p>
+      <p class="switch"><span data-i="haveAccount" id="toLoginFromSignup">Already have an account?</span></p>
+    </div>
+
+    <div id="forgotForm" class="auth-form" style="display:none">
+      <h3 data-i="forgotTitle">Reset password</h3>
+      <input type="email" id="forgotEmail" placeholder="Email">
+      <input type="password" id="forgotNewPass" placeholder="New password" style="display:none">
+      <button class="btn" id="forgotSubmit" data-i="forgotBtn" style="width:100%">Send reset instructions</button>
+      <p class="modal-msg" id="forgotMsg"></p>
+      <p class="switch"><span data-i="backToLogin" id="toLoginFromForgot">Back to log in</span></p>
+    </div>
+  </div>
+</div>
+
+<div id="tradeOverlay" class="modal-overlay">
+  <div class="modal" style="width:360px">
+    <button class="modal-close" id="tradeClose">&times;</button>
+    <h3 data-i="tradeTitle">Trade</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:2px" data-i="tradeSub">Live swap quotes via 0x, executed through your connected wallet no custody, no middleman.</p>
+    <div style="margin-top:14px">
+      <label style="font-size:.8rem;color:var(--muted)" data-i="tradeSell">You sell</label>
+      <input type="number" id="tradeAmount" placeholder="0.0" step="any" style="width:100%;padding:10px;margin:4px 0 10px;border:1px solid var(--line);border-radius:6px">
+      <select id="tradeSellToken" style="width:100%;margin-bottom:10px"><option value="ETH">ETH</option></select>
+      <label style="font-size:.8rem;color:var(--muted)" data-i="tradeBuy">You receive (estimated)</label>
+      <select id="tradeBuyToken" style="width:100%;margin:4px 0 14px">
+        <option value="USDC">USDC</option><option value="DAI">DAI</option><option value="WBTC">WBTC</option>
+      </select>
+      <button class="btn" id="tradeQuoteBtn" style="width:100%" data-i="tradeGetQuote">Get live quote</button>
+      <p class="modal-msg" id="tradeMsg"></p>
+      <div id="tradeQuoteResult" style="display:none;margin-top:10px;padding:12px;background:var(--paper);border-radius:8px;font-size:.88rem"></div>
+      <button class="btn" id="tradeConfirmBtn" style="width:100%;margin-top:10px;display:none" data-i="tradeConfirm">Confirm swap in wallet</button>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <h1 data-i="heroTitle">Trade crypto on your terms, in your language.</h1>
+  <p data-i="heroSub">Live market data, real charts, and a wallet connection you control no jargon, no false promises.</p>
+  <div class="cta">
+    <button class="btn" id="ctaTradeBtn" data-i="ctaTrade">Start trading</button>
+    <button class="btn ghost" id="ctaLearnBtn" data-i="ctaLearn">See how it works</button>
+  </div>
+</section>
+
+<section id="marketsSection">
+  <div class="sec-head"><h2 data-i="marketsTitle">Live Markets</h2><span><span id="walletStatus" data-i="notConnected">Wallet not connected</span> · <span id="lastUpdated" style="color:var(--muted);font-size:.8rem"></span></span></div>
+  <input type="text" id="marketSearch" class="searchBar" placeholder="Search assets…" data-i-ph="searchPlaceholder">
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th data-i="thCoin">Asset</th><th data-i="thPrice">Price</th><th data-i="th24h">24h</th><th data-i="thCap">Market Cap</th><th data-i="thVol">Volume (24h)</th></tr></thead>
+    <tbody id="marketBody"><tr><td colspan="6" data-i="loading">Loading live prices…</td></tr></tbody>
+  </table>
+  </div>
+  <div class="chart-box">
+    <strong id="chartLabel">Select an asset above</strong>
+    <canvas id="sparkCanvas" width="900" height="180"></canvas>
+  </div>
+</section>
+
+<section id="plansSection">
+  <div class="sec-head"><h2 data-i="plansTitle">Ways to grow with Crypto</h2></div>
+  <div class="grid3">
+    <div class="card">
+      <h3 data-i="planDCA">Dollar-cost averaging</h3>
+      <div class="rate">Auto</div>
+      <p data-i="planDCADesc">Buy a fixed amount on a schedule. Historically smooths out volatility but results depend entirely on the market, never guaranteed.</p>
+    </div>
+    <div class="card">
+      <h3 data-i="planHold">Long-term holding</h3>
+      <div class="rate">HODL</div>
+      <p data-i="planHoldDesc">Buy and hold through cycles. Past long-term performance of major assets has been strong, but past results don't predict future ones.</p>
+    </div>
+    <div class="card">
+      <h3 data-i="planRetire">Self-directed retirement</h3>
+      <div class="rate">IRA</div>
+      <p data-i="planRetireDesc">In the US, a self-directed IRA (via a licensed custodian) can hold crypto for retirement this is not a 401(k), and rules vary by country.</p>
+    </div>
+  </div>
+  <p class="disclaimer" data-i="riskNote">Crypto markets are volatile. Nothing on this page is a guaranteed return or financial advice always do your own research and consider consulting a licensed advisor.</p>
+</section>
+
+<section>
+  <div class="sec-head"><h2 data-i="newsTitle">Market news & analysis</h2></div>
+  <div id="newsList"></div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h5 data-i="ftCompany">Company</h5>
+      <a href="#" data-i="ftAbout">About</a>
+      <a href="#" data-i="ftBlog">Blog</a>
+    </div>
+    <div>
+      <h5 data-i="ftProducts">Products</h5>
+      <a href="#marketsSection" data-i="ftMarkets">Markets</a>
+      <a href="#plansSection" data-i="ftPlans">Plans</a>
+      <a href="#" data-i="ftFees">Fees</a>
+    </div>
+    <div>
+      <h5 data-i="ftLegal">Legal</h5>
+      <a href="#" data-i="ftTerms">Terms of Service</a>
+      <a href="#" data-i="ftPrivacy">Privacy Policy</a>
+      <a href="#" data-i="ftRisk">Risk Disclosure</a>
+    </div>
+    <div>
+      <h5 data-i="ftSupport">Support</h5>
+      <a href="#" data-i="ftHelp">Help Center</a>
+      <a href="#" data-i="ftContact">Contact Us</a>
+      <a href="#" data-i="ftStatus">System Status</a>
+    </div>
+  </div>
+  <p class="footer-bottom" data-i="footer">a demo trading interface. Live prices via public market data.</p>
+</footer>
+
+<button id="supportBtn" data-i="supportBtn">💬 24/7 Support</button>
+<div id="supportPanel">
+  <strong data-i="supportTitle">How can we help?</strong>
+  <textarea id="supportMsg" placeholder="Type your question…"></textarea>
+  <button class="btn" id="supportSend" data-i="supportSend" style="width:100%">Send message</button>
+</div>
+
+<script>
+const I18N = {
+  en:{heroTitle:"Trade crypto on your terms, in your language.",heroSub:"Live market data, real charts, and a wallet connection you control no jargon, no false promises.",ctaTrade:"Start trading",ctaLearn:"See how it works",marketsTitle:"Live Markets",notConnected:"Wallet not connected",thCoin:"Asset",thPrice:"Price",th24h:"24h",loading:"Loading live prices…",plansTitle:"Ways to grow with Crypto",planDCA:"Dollar cost averaging",planDCADesc:"Buy a fixed amount on a schedule. Historically smooths out volatility but results depend entirely on the market, never guaranteed.",planHold:"Long term holding",planHoldDesc:"Buy and hold through cycles. Past long term performance of major assets has been strong, but past results don't predict future ones.",planRetire:"Self directed retirement",planRetireDesc:"In the US, a self directed IRA (via a licensed custodian) can hold crypto for retirement this is not a 401(k), and rules vary by country.",riskNote:"Crypto markets are volatile. Nothing on this page is a guaranteed return or financial advice always do your own research and consider consulting a licensed advisor.",newsTitle:"Market news & analysis",footer:"a demo trading interface. Live prices via public market data.",supportBtn:"💬 24/7 Support",supportTitle:"How can we help?",supportSend:"Send message",navLogin:"Log In",navSignup:"Sign Up",loginTitle:"Log in",loginBtn:"Log in",forgotLink:"Forgot password?",needAccount:"Need an account?",signupTitle:"Create your account",signupBtn:"Sign up",haveAccount:"Already have an account?",forgotTitle:"Reset password",forgotBtn:"Send reset instructions",backToLogin:"Back to log in",fundBtn:"Fund Wallet",thCap:"Market Cap",thVol:"Volume (24h)",searchPlaceholder:"Search assets…",ftCompany:"Company",ftAbout:"About",ftBlog:"Blog",ftProducts:"Products",ftMarkets:"Markets",ftPlans:"Plans",ftFees:"Fees",ftLegal:"Legal",ftTerms:"Terms of Service",ftPrivacy:"Privacy Policy",ftRisk:"Risk Disclosure",ftSupport:"Support",ftHelp:"Help Center",ftContact:"Contact Us",ftStatus:"System Status",tradeTitle:"Trade",tradeSub:"Live swap quotes via 0x, executed through your connected wallet no custody, no middleman.",tradeSell:"You sell",tradeBuy:"You receive (estimated)",tradeGetQuote:"Get live quote",tradeConfirm:"Confirm swap in wallet"},
+  es:{heroTitle:"Opera cripto a tu manera, en tu idioma.",heroSub:"Datos de mercado en vivo, gráficos reales y conexión de billetera bajo tu control sin jerga ni promesas falsas.",ctaTrade:"Empezar a operar",ctaLearn:"Ver cómo funciona",marketsTitle:"Mercados en vivo",notConnected:"Billetera no conectada",thCoin:"Activo",thPrice:"Precio",th24h:"24h",loading:"Cargando precios en vivo…",plansTitle:"Formas de crecer con Vaultra",planDCA:"Promedio de costo",planDCADesc:"Compra un monto fijo periódicamente. Suaviza la volatilidad históricamente, pero los resultados dependen del mercado y no están garantizados.",planHold:"Retención a largo plazo",planHoldDesc:"Compra y mantén a través de ciclos. El rendimiento pasado no garantiza resultados futuros.",planRetire:"Retiro autodirigido",planRetireDesc:"En EE.UU., una IRA autodirigida puede tener cripto para el retiro no es un 401(k), y varía por país.",riskNote:"Los mercados cripto son volátiles. Nada aquí es un rendimiento garantizado ni asesoría financiera investiga y consulta a un asesor licenciado.",newsTitle:"Noticias y análisis",footer:"es una interfaz de demostración. Precios en vivo vía datos públicos.",supportBtn:"💬 Soporte 24/7",supportTitle:"¿Cómo podemos ayudar?",supportSend:"Enviar mensaje"},
+  fr:{heroTitle:"Tradez la crypto à votre façon, dans votre langue.",heroSub:"Données de marché en direct, graphiques réels et connexion de portefeuille que vous contrôlez.",ctaTrade:"Commencer",ctaLearn:"Voir comment ça marche",marketsTitle:"Marchés en direct",notConnected:"Portefeuille non connecté",thCoin:"Actif",thPrice:"Prix",th24h:"24h",loading:"Chargement des prix…",plansTitle:"Façons de croître avec Vaultra",planDCA:"Achat programmé",planDCADesc:"Achetez un montant fixe régulièrement. Lisse la volatilité historiquement, sans garantie de résultat.",planHold:"Détention long terme",planHoldDesc:"Achetez et conservez à travers les cycles. Les performances passées ne garantissent pas l'avenir.",planRetire:"Retraite autogérée",planRetireDesc:"Aux États-Unis, un IRA autogéré peut détenir de la crypto ce n'est pas un 401(k), et cela varie selon le pays.",riskNote:"Les marchés crypto sont volatils. Rien ici n'est un rendement garanti ni un conseil financier.",newsTitle:"Actualités et analyses",footer:"est une interface de démonstration.",supportBtn:"💬 Support 24/7",supportTitle:"Comment pouvons nous aider ?",supportSend:"Envoyer"},
+  pt:{heroTitle:"Negocie cripto do seu jeito, no seu idioma.",heroSub:"Dados de mercado ao vivo, gráficos reais e conexão de carteira sob seu controle.",ctaTrade:"Começar a negociar",ctaLearn:"Ver como funciona",marketsTitle:"Mercados ao vivo",notConnected:"Carteira não conectada",thCoin:"Ativo",thPrice:"Preço",th24h:"24h",loading:"Carregando preços…",plansTitle:"Formas de crescer com a Vaultra",planDCA:"Custo médio",planDCADesc:"Compre um valor fixo periodicamente. Historicamente suaviza a volatilidade, sem garantia de resultado.",planHold:"Retenção de longo prazo",planHoldDesc:"Compre e mantenha durante os ciclos. Desempenho passado não garante resultados futuros.",planRetire:"Aposentadoria autodirigida",planRetireDesc:"Nos EUA, uma IRA autodirigida pode manter cripto não é um 401(k), e varia por país.",riskNote:"Os mercados de cripto são voláteis. Nada aqui é retorno garantido ou aconselhamento financeiro.",newsTitle:"Notícias e análises",footer:"é uma interface de demonstração.",supportBtn:"💬 Suporte 24/7",supportTitle:"Como podemos ajudar?",supportSend:"Enviar mensagem"},
+  ar:{heroTitle:"تداول العملات الرقمية بطريقتك وبلغتك.",heroSub:"بيانات سوق حية، رسوم بيانية حقيقية، واتصال محفظة تتحكم به بالكامل.",ctaTrade:"ابدأ التداول",ctaLearn:"شاهد كيف يعمل",marketsTitle:"الأسواق المباشرة",notConnected:"المحفظة غير متصلة",thCoin:"الأصل",thPrice:"السعر",th24h:"24 ساعة",loading:"جارٍ تحميل الأسعار…",plansTitle:"طرق النمو مع Vaultra",planDCA:"الشراء الدوري",planDCADesc:"اشترِ مبلغًا ثابتًا بشكل دوري. يخفف التقلب تاريخيًا، لكن النتائج غير مضمونة.",planHold:"الاحتفاظ طويل الأمد",planHoldDesc:"الشراء والاحتفاظ عبر الدورات. الأداء السابق لا يضمن النتائج المستقبلية.",planRetire:"تقاعد ذاتي التوجيه",planRetireDesc:"في الولايات المتحدة، يمكن لحساب IRA ذاتي التوجيه امتلاك العملات الرقمية — وهذا ليس 401(k)، ويختلف حسب الدولة.",riskNote:"أسواق العملات الرقمية متقلبة. لا شيء هنا يمثل عائدًا مضمونًا أو استشارة مالية.",newsTitle:"أخبار وتحليلات السوق",footer:"واجهة تجريبية للتداول.",supportBtn:"💬 دعم على مدار الساعة",supportTitle:"كيف يمكننا المساعدة؟",supportSend:"إرسال"}
+};
+
+function applyLang(lang){
+  const dict = I18N[lang] || I18N.en;
+  document.documentElement.setAttribute('dir', lang==='ar' ? 'rtl':'ltr');
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    const key = el.getAttribute('data-i');
+    if(dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i-ph');
+    if(dict[key]) el.placeholder = dict[key];
+  });
+}
+const langSel = document.getElementById('langSel');
+langSel.addEventListener('change', e=>applyLang(e.target.value));
+(function autoDetect(){
+  const browserLang = (navigator.language||'en').slice(0,2);
+  const lang = I18N[browserLang] ? browserLang : 'en';
+  langSel.value = lang;
+  applyLang(lang);
+})();
+
+// Live market data: CoinGecko for the initial snapshot + 7-day sparkline,
+// then Binance's public WebSocket for true real-time tick-by-tick price updates.
+const COINS = ['bitcoin','ethereum','binancecoin','solana','ripple','cardano','dogecoin','polkadot','chainlink','avalanche-2','litecoin'];
+const BINANCE_SYMBOL = { bitcoin:'btcusdt', ethereum:'ethusdt', binancecoin:'bnbusdt', solana:'solusdt', ripple:'xrpusdt', cardano:'adausdt', dogecoin:'dogeusdt', polkadot:'dotusdt', chainlink:'linkusdt', 'avalanche-2':'avaxusdt', litecoin:'ltcusdt' };
+let sparkData = {}; let selectedCoin = null; let latestRows = {}; let coinOrder = [];
+
+function fmtCompact(n){
+  if(n==null) return '—';
+  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9) return '$'+(n/1e9).toFixed(2)+'B';
+  if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M';
+  return '$'+n.toLocaleString();
+}
+
+function renderRow(id, name, image, price, change, rank, marketCap, volume){
+  let tr = document.getElementById('row-'+id);
+  const changeClass = change>=0?'up':'down';
+  const changeText = (change>=0?'+':'')+change.toFixed(2)+'%';
+  const priceText = '$'+price.toLocaleString(undefined,{maximumFractionDigits: price<1?4:2});
+  if(!tr){
+    tr=document.createElement('tr'); tr.id='row-'+id; tr.dataset.name=name.toLowerCase();
+    tr.innerHTML=`<td class="rank">${rank||''}</td><td><div class="coin"><img src="${image}">${name}</div></td><td class="px"></td><td class="chg"></td><td class="mkt-meta cap"></td><td class="mkt-meta vol"></td>`;
+    tr.addEventListener('click',()=>{ selectedCoin=id; drawChart(id,name); });
+    document.getElementById('marketBody').appendChild(tr);
+  }
+  const pxEl = tr.querySelector('.px'), chgEl = tr.querySelector('.chg');
+  if(pxEl.textContent !== priceText){ pxEl.style.background = change>=0 ? '#e6f5ee':'#fcecea'; setTimeout(()=>pxEl.style.background='',400); }
+  pxEl.textContent = priceText;
+  chgEl.textContent = changeText; chgEl.className = 'chg '+changeClass;
+  if(marketCap!=null) tr.querySelector('.cap').textContent = fmtCompact(marketCap);
+  if(volume!=null) tr.querySelector('.vol').textContent = fmtCompact(volume);
+}
+
+document.getElementById('marketSearch').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#marketBody tr[id^="row-"]').forEach(tr=>{
+    tr.style.display = tr.dataset.name.includes(q) ? '' : 'none';
+  });
+});
+
+async function loadInitialSnapshot(){
+  try{
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${COINS.join(',')}&sparkline=true&price_change_percentage=24h`);
+    const data = await res.json();
+    document.getElementById('marketBody').innerHTML='';
+    data.forEach((c,i)=>{
+      sparkData[c.id]=c.sparkline_in_7d.price;
+      latestRows[c.id] = { name:c.name, image:c.image, price:c.current_price, change:c.price_change_percentage_24h||0, marketCap:c.market_cap, volume:c.total_volume };
+      renderRow(c.id, c.name, c.image, c.current_price, c.price_change_percentage_24h||0, i+1, c.market_cap, c.total_volume);
+    });
+    if(!selectedCoin && data[0]) selectedCoin = data[0].id;
+    const current = data.find(c=>c.id===selectedCoin) || data[0];
+    if(current) drawChart(current.id, current.name);
+    document.getElementById('lastUpdated').textContent = 'Live';
+    connectLiveTicker();
+  }catch(e){
+    document.getElementById('marketBody').innerHTML='<tr><td colspan="6">Live prices unavailable right now.</td></tr>';
+  }
+}
+
+function connectLiveTicker(){
+  const streams = Object.values(BINANCE_SYMBOL).map(s=>`${s}@ticker`).join('/');
+  const ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
+  ws.onmessage = (event)=>{
+    const msg = JSON.parse(event.data);
+    const data = msg.data; if(!data) return;
+    const symbol = data.s.toLowerCase(); // e.g. btcusdt
+    const id = Object.keys(BINANCE_SYMBOL).find(k=>BINANCE_SYMBOL[k]===symbol);
+    if(!id) return;
+    const price = parseFloat(data.c); const change = parseFloat(data.P);
+    latestRows[id] = { ...latestRows[id], price, change };
+    renderRow(id, latestRows[id].name, latestRows[id].image, price, change, null, latestRows[id].marketCap, latestRows[id].volume);
+    if(id === selectedCoin){
+      if(!sparkData[id]) sparkData[id] = [];
+      sparkData[id].push(price);
+      if(sparkData[id].length > 300) sparkData[id].shift(); // cap length so the chart stays smooth, not overloaded
+      drawChart(id, latestRows[id].name, true);
+    }
+  };
+  ws.onerror = ()=>{ document.getElementById('lastUpdated').textContent = 'Live feed error — retrying…'; };
+  ws.onclose = ()=>{ setTimeout(connectLiveTicker, 3000); }; // auto-reconnect
+}
+loadInitialSnapshot();
+
+function drawChart(id,name,isLive){
+  const prices = sparkData[id]; if(!prices) return;
+  document.getElementById('chartLabel').textContent = isLive ? name+' — live' : name+' — 7 day trend';
+  const cv = document.getElementById('sparkCanvas'); const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const min=Math.min(...prices), max=Math.max(...prices);
+  ctx.strokeStyle='#1f6f5c'; ctx.lineWidth=2; ctx.beginPath();
+  prices.forEach((p,i)=>{
+    const x = i/(prices.length-1)*cv.width;
+    const y = cv.height - ((p-min)/(max-min||1))*160 - 10;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
+
+// Wallet connect (MetaMask / injected)
+let connectedWallet = null;
+document.getElementById('connectBtn').addEventListener('click', async ()=>{
+  if(window.ethereum){
+    try{
+      const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+      connectedWallet = accounts[0];
+      document.getElementById('walletStatus').textContent = connectedWallet.slice(0,6)+'…'+connectedWallet.slice(-4);
+      document.getElementById('connectBtn').textContent='Connected';
+    }catch(e){ document.getElementById('walletStatus').textContent='Connection declined'; }
+  } else {
+    document.getElementById('walletStatus').textContent='No wallet extension found (install MetaMask)';
+  }
+});
+
+// Fund Wallet — fiat on-ramp via backend-generated Transak widget session
+const onrampOverlay = document.getElementById('onrampOverlay');
+document.getElementById('fundBtn').addEventListener('click', async ()=>{
+  onrampOverlay.classList.add('open');
+  const body = document.getElementById('onrampBody');
+  body.innerHTML = '<p class="modal-msg">Loading…</p>';
+  if(!connectedWallet){
+    body.innerHTML = '<p class="modal-msg err">Connect your wallet first so funds land in the right place.</p>';
+    return;
+  }
+  try{
+    const res = await fetch(`${API_BASE}/api/onramp/widget-url`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({walletAddress:connectedWallet, fiatCurrency:'USD', cryptoCurrencyCode:'ETH'})
+    });
+    const data = await res.json();
+    if(!res.ok){ body.innerHTML = `<p class="modal-msg err">${data.error}</p>`; return; }
+    body.innerHTML = `<iframe src="${data.widgetUrl}" style="width:100%;height:520px;border:none;border-radius:8px" allow="camera;microphone;payment"></iframe>`;
+  }catch{
+    body.innerHTML = '<p class="modal-msg err">Could not reach the server. Is the backend running?</p>';
+  }
+});
+document.getElementById('onrampClose').addEventListener('click',()=>{ onrampOverlay.classList.remove('open'); document.getElementById('onrampBody').innerHTML=''; });
+onrampOverlay.addEventListener('click', e=>{ if(e.target===onrampOverlay){ onrampOverlay.classList.remove('open'); document.getElementById('onrampBody').innerHTML=''; } });
+
+// Static illustrative news (replace with a real news API for production)
+const NEWS = [
+  {t:"Spot ETF flows turn positive for third straight week", s:"Market Desk · 2h ago"},
+  {t:"Layer-2 activity hits new high as fees drop across major chains", s:"Chain Report · 5h ago"},
+  {t:"Regulators outline new custody guidance for exchanges", s:"Policy Wire · 1d ago"}
+];
+document.getElementById('newsList').innerHTML = NEWS.map(n=>`<div class="news-item"><h4>${n.t}</h4><span>${n.s}</span></div>`).join('');
+
+// Hero CTA buttons
+document.getElementById('ctaTradeBtn').addEventListener('click',()=>{
+  const loggedIn = !!localStorage.getItem('vaultra_token');
+  if(!loggedIn){ showModal('signup'); return; }
+  openTradePanel();
+});
+document.getElementById('ctaLearnBtn').addEventListener('click',()=>{
+  document.getElementById('plansSection').scrollIntoView({behavior:'smooth'});
+});
+
+// Trade panel — real swap quotes from 0x, executed via the connected wallet
+const tradeOverlay = document.getElementById('tradeOverlay');
+function openTradePanel(){
+  tradeOverlay.classList.add('open');
+  document.getElementById('tradeQuoteResult').style.display='none';
+  document.getElementById('tradeConfirmBtn').style.display='none';
+  setMsg('tradeMsg', connectedWallet ? '' : 'Connect your wallet to get a live quote.', true);
+}
+document.getElementById('tradeNavBtn').addEventListener('click',()=>{
+  const loggedIn = !!localStorage.getItem('vaultra_token');
+  if(!loggedIn){ showModal('signup'); return; }
+  openTradePanel();
+});
+document.getElementById('tradeClose').addEventListener('click',()=>tradeOverlay.classList.remove('open'));
+tradeOverlay.addEventListener('click', e=>{ if(e.target===tradeOverlay) tradeOverlay.classList.remove('open'); });
+
+let currentQuote = null;
+document.getElementById('tradeQuoteBtn').addEventListener('click', async ()=>{
+  if(!connectedWallet) return setMsg('tradeMsg','Connect your wallet first.');
+  const amount = parseFloat(document.getElementById('tradeAmount').value);
+  if(!amount || amount<=0) return setMsg('tradeMsg','Enter an amount to sell.');
+  const sellToken = document.getElementById('tradeSellToken').value;
+  const buyToken = document.getElementById('tradeBuyToken').value;
+  const sellAmountWei = BigInt(Math.round(amount*1e18)).toString();
+  setMsg('tradeMsg','Fetching live quote…',true);
+  document.getElementById('tradeQuoteResult').style.display='none';
+  document.getElementById('tradeConfirmBtn').style.display='none';
+  try{
+    const res = await fetch(`${API_BASE}/api/trade/quote?sellToken=${sellToken}&buyToken=${buyToken}&sellAmountWei=${sellAmountWei}&taker=${connectedWallet}`);
+    const data = await res.json();
+    if(!res.ok) return setMsg('tradeMsg', data.error);
+    currentQuote = data;
+    const buyAmountDisplay = (Number(data.buyAmount)/1e6).toFixed(4); // USDC/DAI use 6-18 decimals; simplified display
+    setMsg('tradeMsg','',true);
+    const box = document.getElementById('tradeQuoteResult');
+    box.style.display='block';
+    box.innerHTML = `Sell <strong>${amount} ${sellToken}</strong> → receive approximately <strong>${buyAmountDisplay} ${buyToken}</strong><br><span style="color:var(--muted);font-size:.8rem">Price impact: ${data.estimatedPriceImpact||'—'}%. Quote refreshes each time you click "Get live quote."</span>`;
+    document.getElementById('tradeConfirmBtn').style.display='block';
+  }catch{ setMsg('tradeMsg','Could not reach the server. Is the backend running?'); }
+});
+
+document.getElementById('tradeConfirmBtn').addEventListener('click', async ()=>{
+  if(!currentQuote?.transaction || !window.ethereum) return;
+  const tx = currentQuote.transaction;
+  try{
+    setMsg('tradeMsg','Confirm the transaction in your wallet…',true);
+    const txHash = await window.ethereum.request({
+      method:'eth_sendTransaction',
+      params:[{ from:connectedWallet, to:tx.to, data:tx.data, value:'0x'+BigInt(tx.value||0).toString(16), gas:'0x'+BigInt(tx.gas||0).toString(16) }]
+    });
+    setMsg('tradeMsg','Transaction submitted: '+txHash.slice(0,10)+'…',true);
+  }catch(e){ setMsg('tradeMsg','Transaction was not completed: '+(e.message||'cancelled')); }
+});
+
+document.querySelectorAll('#marketBody').forEach(()=>{}); // (row-click already opens the chart; trading panel opens via Start Trading / Fund Wallet nav for now)
+
+// Auth — talks to the Vaultra backend API (see /vaultra-backend). Update this to your deployed backend URL.
+//const API_BASE = 'http://localhost:4000';
+const API_BASE = 'https://crypto-dem.onrender.com';
+const overlay=document.getElementById('authOverlay');
+const forms={login:document.getElementById('loginForm'),signup:document.getElementById('signupForm'),forgot:document.getElementById('forgotForm')};
+function showModal(which){
+  overlay.classList.add('open');
+  Object.values(forms).forEach(f=>f.style.display='none');
+  forms[which].style.display='block';
+}
+document.getElementById('loginNavBtn').addEventListener('click',()=>showModal('login'));
+document.getElementById('signupNavBtn').addEventListener('click',()=>showModal('signup'));
+document.getElementById('modalClose').addEventListener('click',()=>overlay.classList.remove('open'));
+overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.classList.remove('open'); });
+document.getElementById('toForgot').addEventListener('click',()=>showModal('forgot'));
+document.getElementById('toSignupFromLogin').addEventListener('click',()=>showModal('signup'));
+document.getElementById('toLoginFromSignup').addEventListener('click',()=>showModal('login'));
+document.getElementById('toLoginFromForgot').addEventListener('click',()=>showModal('login'));
+
+function setMsg(id,text,ok){ const el=document.getElementById(id); el.textContent=text; el.className='modal-msg '+(ok?'ok':'err'); }
+
+function setLoggedIn(user,token){
+  localStorage.setItem('vaultra_token', token);
+  document.getElementById('authArea').innerHTML =
+    `<span id="userChip">Hi, ${user.name||user.email} · <span id="logoutBtn" style="text-decoration:underline;cursor:pointer">Log out</span></span>`;
+  document.getElementById('logoutBtn').addEventListener('click',()=>{ localStorage.removeItem('vaultra_token'); location.reload(); });
+}
+(async function checkSession(){
+  const token = localStorage.getItem('vaultra_token');
+  if(!token) return;
+  try{
+    const res = await fetch(`${API_BASE}/api/auth/me`, { headers:{ Authorization:`Bearer ${token}` } });
+    if(res.ok){ const data=await res.json(); setLoggedIn(data.user, token); }
+    else localStorage.removeItem('vaultra_token');
+  }catch{ /* backend not reachable yet — leave logged-out state */ }
+})();
+
+document.getElementById('signupSubmit').addEventListener('click', async ()=>{
+  const name=document.getElementById('signupName').value.trim();
+  const email=document.getElementById('signupEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('signupPass').value;
+  if(!email||!pass) return setMsg('signupMsg','Please fill in all fields.');
+  try{
+    const res = await fetch(`${API_BASE}/api/auth/signup`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
+    const data = await res.json();
+    if(!res.ok) return setMsg('signupMsg', data.error||'Something went wrong.');
+    setMsg('signupMsg','Account created!',true);
+    setTimeout(()=>{ overlay.classList.remove('open'); setLoggedIn(data.user, data.token); },500);
+  }catch{ setMsg('signupMsg','Could not reach the server. Is the backend running?'); }
+});
+
+document.getElementById('loginSubmit').addEventListener('click', async ()=>{
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  try{
+    const res = await fetch(`${API_BASE}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const data = await res.json();
+    if(!res.ok) return setMsg('loginMsg', data.error||'Something went wrong.');
+    setMsg('loginMsg','Welcome back!',true);
+    setTimeout(()=>{ overlay.classList.remove('open'); setLoggedIn(data.user, data.token); },400);
+  }catch{ setMsg('loginMsg','Could not reach the server. Is the backend running?'); }
+});
+
+let forgotStage='request';
+document.getElementById('forgotSubmit').addEventListener('click', async ()=>{
+  const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
+  try{
+    if(forgotStage==='request'){
+      const res = await fetch(`${API_BASE}/api/auth/forgot-password`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+      const data = await res.json();
+      setMsg('forgotMsg', data.message,true);
+      // In a real deployment the user clicks the emailed link, which opens a
+      // dedicated reset page pre-filled with the token. This inline fallback
+      // just asks for the token directly for convenience during development.
+      const token = prompt('Paste the reset token from your email (or the server console in dev mode):');
+      if(!token) return;
+      forgotStage='reset'; forgotToken=token;
+      document.getElementById('forgotNewPass').style.display='block';
+      document.getElementById('forgotSubmit').textContent='Set new password';
+    } else {
+      const newPass=document.getElementById('forgotNewPass').value;
+      const res = await fetch(`${API_BASE}/api/auth/reset-password`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:forgotToken,newPassword:newPass})});
+      const data = await res.json();
+      if(!res.ok) return setMsg('forgotMsg', data.error||'Something went wrong.');
+      setMsg('forgotMsg', data.message,true);
+      forgotStage='request';
+      setTimeout(()=>showModal('login'),900);
+    }
+  }catch{ setMsg('forgotMsg','Could not reach the server. Is the backend running?'); }
+});
+let forgotToken=null;
+
+// Support widget
+const supportBtn=document.getElementById('supportBtn'), panel=document.getElementById('supportPanel');
+supportBtn.addEventListener('click',()=>panel.style.display = panel.style.display==='block'?'none':'block');
+document.getElementById('supportSend').addEventListener('click',()=>{
+  const msg=document.getElementById('supportMsg');
+  if(msg.value.trim()){ alert('Message queued — a support agent will follow up.'); msg.value=''; panel.style.display='none'; }
+});
+</script>
+</body>
+</html>
