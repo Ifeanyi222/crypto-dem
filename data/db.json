@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "694b4ac0-597e-4885-9009-0d84217cb7e1",
+      "name": "taye mike",
+      "email": "mikety@ymail.com",
+      "passwordHash": "$2b$12$NH8LIsGEgh8P/58a1MGzOOSuIuXtVH/ZDepvOVhA5s7pWfoIAXkPW",
+      "resetToken": null,
+      "resetTokenExpires": null,
+      "createdAt": "2026-09-20T12:45:35.199Z"
+    }
+  ]
+}
